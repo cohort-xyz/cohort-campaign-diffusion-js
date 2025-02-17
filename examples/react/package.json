@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "@cohort-xyz/cohort-campaign-diffusion-js": "workspace:*",
+    "@phosphor-icons/react": "^2.1.0",
+    "@radix-ui/react-slot": "^1.1.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.6.0"
+  },
+  "description": "React implementation of the Cohort Campaign Diffusion SDK",
+  "devDependencies": {
+    "@types/react": "^18.2.66",
+    "@types/react-dom": "^18.2.22",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.20",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "tailwindcss": "^3.4.16"
+  },
+  "name": "react-example",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "lint": "biome check --apply src"
+  },
+  "type": "module",
+  "version": "1.0.0"
+}

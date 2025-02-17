@@ -1,0 +1,76 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 217.89 10.61% 64.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    --border: 220 13.04% 90.98%;
+
+    --input: 220 13.04% 90.98%;
+
+    --primary: 154.74 32.2% 23.14%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 265.67 100% 57.84%;
+    --secondary-darker: hsl(264.85 79.84% 51.37%);
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: var(--primary);
+
+    --radius: 0.5rem;
+
+    --content-max-width: 2000px;
+    --panel-background: hsl(223, 84%, 5%);
+    --panel-foreground: hsl(0 0% 100%);
+
+    --primary-background: hsl(51.43, 33.33%, 95.88%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply m-0 bg-background p-0 text-foreground;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}

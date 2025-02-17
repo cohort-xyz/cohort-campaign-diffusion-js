@@ -13,7 +13,7 @@ type FetchOptions = {
   initialDelay?: number;
 };
 
-class CohortCampaignSDK {
+class CohortCampaignDiffusionSDK {
   #apiKey: string;
   #isReady = false;
   #verbose: boolean;
@@ -315,4 +315,12 @@ class CohortCampaignSDK {
   }
 }
 
-export default CohortCampaignSDK;
+declare global {
+  interface Window {
+    CohortCampaignDiffusionSDK: typeof CohortCampaignDiffusionSDK;
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.CohortCampaignDiffusionSDK = CohortCampaignDiffusionSDK;
+}

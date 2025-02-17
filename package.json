@@ -52,9 +52,9 @@
     "url": "git+https://github.com/cohort-xyz/cohort-campaign-diffusion-js.git"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.project.json && vite build",
+    "build": "tsc --project tsconfig.project.json && vite build --mode production",
     "commitlint": "commitlint",
-    "dev": "vite build --watch --emptyOutDir false",
+    "dev": "vite build --mode development --watch --emptyOutDir false",
     "lint": "biome check src --organize-imports-enabled=false",
     "lint:apply": "pnpm run lint --apply",
     "prepare": "husky",

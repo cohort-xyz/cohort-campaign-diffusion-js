@@ -8,9 +8,18 @@ export default defineConfig({
       entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'CohortCampaignDiffusionSDK',
       fileName: format => `cohort-campaign-diffusion-sdk.${format}.js`,
+      formats: ['es', 'umd'],
     },
     sourcemap: true,
     emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        exports: 'named',
+        globals: {
+          CohortCampaignDiffusionSDK: 'CohortCampaignDiffusionSDK',
+        },
+      },
+    },
   },
   plugins: [
     dts({

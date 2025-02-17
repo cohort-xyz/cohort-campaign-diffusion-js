@@ -16,12 +16,6 @@ Find all the Cohort's documentation at [docs.getcohort.com](https://docs.getcoho
 ## Table of Contents
 
 - [Installation](#installation)
-- [Usage](#usage)
-  - [Initialization](#initialization)
-  - [Rendering the Experience Space](#rendering-the-experience-space)
-  - [Handling Messages](#handling-messages)
-- [API](#api)
-  - [Methods](#methods)
 - [Examples](#examples)
 - [Development](#development)
 - [License](#license)
@@ -31,11 +25,15 @@ Find all the Cohort's documentation at [docs.getcohort.com](https://docs.getcoho
 Via CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@cohort-xyz/cohort-campaign-sdk-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@cohort-xyz/cohort-campaign-diffusion-js/dist/cohort-campaign-diffusion-sdk.umd.js"></script>
 <script>
-  const cohort = new CohortCampaignSDK(<YOUR_API_KEY>);
+  const cohort = new CohortCampaignDiffusionSDK('YOUR_API_KEY');
 </script>
 ```
+
+## Examples
+
+- [React Example](examples/react/README.md)
 
 ## Development
 
