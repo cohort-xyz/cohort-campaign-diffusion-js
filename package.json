@@ -1,0 +1,72 @@
+{
+  "author": "Cohort",
+  "description": "Javascript SDK for broadcasting Cohort Challenges in your website",
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@commitlint/cli": "^19.7.1",
+    "@commitlint/config-conventional": "^19.7.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@types/node": "^22.13.4",
+    "husky": "^9.1.7",
+    "semantic-release": "^24.2.3",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0",
+    "vite-plugin-dts": "^4.5.0"
+  },
+  "engines": {
+    "node": "22.14.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/cohort-campaign-diffusion-sdk.es.js",
+      "require": "./dist/cohort-campaign-diffusion-sdk.umd.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "license": "MIT",
+  "main": "dist/cohort-campaign-diffusion-sdk.umd.js",
+  "module": "dist/cohort-campaign-diffusion-sdk.es.js",
+  "name": "@cohort-xyz/cohort-campaign-diffusion-js",
+  "packageManager": "pnpm@10.4.1",
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/changelog",
+      "@semantic-release/github"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cohort-xyz/cohort-campaign-diffusion-js.git"
+  },
+  "scripts": {
+    "build": "tsc --project tsconfig.project.json && vite build",
+    "commitlint": "commitlint",
+    "dev": "vite build --watch --emptyOutDir false",
+    "lint": "biome check src --organize-imports-enabled=false",
+    "lint:apply": "pnpm run lint --apply",
+    "prepare": "husky",
+    "semantic-release": "semantic-release"
+  },
+  "type": "module",
+  "types": "dist/index.d.ts",
+  "version": "1.0.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@biomejs/biome",
+      "esbuild"
+    ]
+  }
+}
