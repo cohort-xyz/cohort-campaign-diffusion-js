@@ -1,4 +1,4 @@
-import type { LocalizedString } from './localization';
+import type {LocalizedString} from './localization';
 
 export type CampaignConfig = {
   id: string;
@@ -56,5 +56,4 @@ abstract class CampaignEngagementVector {
   abstract destroy(): void;
 }
 
-export { CampaignEngagementVector };
-
+export {CampaignEngagementVector};

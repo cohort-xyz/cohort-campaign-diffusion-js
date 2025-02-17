@@ -40,7 +40,7 @@
 			"lineWidth": 100,
 			"quoteProperties": "asNeeded",
 			"semicolons": "always",
-			"trailingComma": "all"
+			"trailingCommas": "all"
 		}
 	},
 	"json": {

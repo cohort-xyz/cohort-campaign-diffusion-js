@@ -1,6 +1,6 @@
 import config from './config';
-import type { CampaignConfig, ToastSDKConfig } from './utils';
-import { CampaignEngagementVector } from './utils';
+import type {CampaignConfig, ToastSDKConfig} from './utils';
+import {CampaignEngagementVector} from './utils';
 
 class Toast extends CampaignEngagementVector {
   #toastConfig: ToastSDKConfig['typeConfig'];

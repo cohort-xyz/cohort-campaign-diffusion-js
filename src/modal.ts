@@ -1,5 +1,5 @@
 import config from './config';
-import { CampaignEngagementVector } from './utils';
+import {CampaignEngagementVector} from './utils';
 
 class Modal extends CampaignEngagementVector {
   generateStyles(): HTMLStyleElement {

@@ -1,7 +1,7 @@
 import config from './config';
 import Logger from './logger';
-import type { BannerSDKConfig, CampaignConfig } from './utils';
-import { CampaignEngagementVector } from './utils';
+import type {BannerSDKConfig, CampaignConfig} from './utils';
+import {CampaignEngagementVector} from './utils';
 
 class Banner extends CampaignEngagementVector {
   #bannerConfig: BannerSDKConfig['typeConfig'];
@@ -10,7 +10,7 @@ class Banner extends CampaignEngagementVector {
   constructor(
     campaignConfig: CampaignConfig,
     bannerConfig: BannerSDKConfig['typeConfig'],
-    verbose = false
+    verbose = false,
   ) {
     super(campaignConfig);
     this.#bannerConfig = bannerConfig;

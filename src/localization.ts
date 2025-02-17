@@ -7,7 +7,7 @@ function getBrowserLanguage(): string {
 function getPreferredLanguages(): string[] {
   return (
     navigator.languages
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      // biome-ignore lint/style/noNonNullAssertion: We know that navigator.languages is an array of strings
       .map(lang => lang.split('-')[0]!.toLowerCase())
       .filter((lang, index, self) => self.indexOf(lang) === index)
   );
@@ -26,8 +26,7 @@ function getLocalizedValue(localizedString: LocalizedString): string {
   ];
   const selectedLanguage = languagePriority.find(lang => lang && lang in localizedString);
 
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  return selectedLanguage ? localizedString[selectedLanguage]! : '';
+  return selectedLanguage ? (localizedString[selectedLanguage] ?? '') : '';
 }
 
 export default getLocalizedValue;

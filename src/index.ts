@@ -1,8 +1,8 @@
 import config from './config';
-import CampaignEngagementFactory from './factory';
+import campaignEngagementFactory from './factory';
 import getLocalizedValue from './localization';
 import Logger from './logger';
-import type { CampaignEngagementVector, RawSDKConfig, SDKConfig } from './utils';
+import type {CampaignEngagementVector, RawSDKConfig, SDKConfig} from './utils';
 
 function wait(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -37,7 +37,7 @@ class CohortCampaignSDK {
   async #fetchWithRetry(
     url: string,
     options: RequestInit = {},
-    retryOptions: FetchOptions = {}
+    retryOptions: FetchOptions = {},
   ): Promise<unknown> {
     const {
       maxRetries = config.DEFAULT_EXPONENTIAL_BACKOFF_RETRIES,
@@ -67,7 +67,7 @@ class CohortCampaignSDK {
           throw error;
         }
         // Calculate delay with exponential backoff: 1s, 2s, 4s, etc.
-        const delay = initialDelay * Math.pow(2, attempt - 1);
+        const delay = initialDelay * 2 ** (attempt - 1);
 
         await wait(delay);
       }
@@ -78,7 +78,7 @@ class CohortCampaignSDK {
     if (!this.#config || this.#engagementVector) {
       return;
     }
-    this.#engagementVector = CampaignEngagementFactory.create(this.#config, this.#verbose);
+    this.#engagementVector = campaignEngagementFactory(this.#config, this.#verbose);
     this.#engagementVector.show();
   }
 
@@ -95,7 +95,7 @@ class CohortCampaignSDK {
       if (!this.#hasInteracted) {
         this.#hasInteracted = true;
         this.#logger.log(
-          `No interaction detected, displaying campaign engagement after ${config.DEFAULT_DISPLAY_TIMEOUT}ms`
+          `No interaction detected, displaying campaign engagement after ${config.DEFAULT_DISPLAY_TIMEOUT}ms`,
         );
         this.#displayCampaignEngagement();
       }
@@ -119,7 +119,7 @@ class CohortCampaignSDK {
 
       if (scrollPercent >= config.DEFAULT_SCROLL_TRIGGER_PERCENTAGE) {
         this.#logger.log(
-          `User scrolled more than ${config.DEFAULT_SCROLL_TRIGGER_PERCENTAGE}%, displaying campaign engagement`
+          `User scrolled more than ${config.DEFAULT_SCROLL_TRIGGER_PERCENTAGE}%, displaying campaign engagement`,
         );
         this.#hasInteracted = true;
 
@@ -281,10 +281,10 @@ class CohortCampaignSDK {
       );
     };
     this.#logger.log(
-      `Fetching sdk config from ${config.API_URL}/merchants/campaign-diffusion-configuration...`
+      `Fetching sdk config from ${config.API_URL}/merchants/campaign-diffusion-configuration...`,
     );
     const data = await this.#fetchWithRetry(
-      `${config.API_URL}/merchants/campaign-diffusion-configuration`
+      `${config.API_URL}/merchants/campaign-diffusion-configuration`,
     );
 
     if (data === null) {
