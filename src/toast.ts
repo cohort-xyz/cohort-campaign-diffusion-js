@@ -1,4 +1,4 @@
-import config from './config';
+import {getChallengeViewButton, getCloseButton} from './dom';
 import type {CampaignConfig, ToastSDKConfig} from './utils';
 import {CampaignEngagementVector} from './utils';
 
@@ -17,8 +17,19 @@ class Toast extends CampaignEngagementVector {
         position: fixed;
         bottom: 24px;
         z-index: 9999;
-        width: 400px;
+        min-width: 400px;
+        max-width: 600px;
         transition: all 0.3s ease-in-out;
+      }
+
+       @media (max-width: 640px) {
+        .cohort-toast-container {
+          width: calc(100% - 32px);
+          min-width: auto;
+          left: 16px !important;
+          right: 16px !important;
+          bottom: 16px !important;
+        }
       }
 
       .cohort-toast-container.bottom-right {
@@ -31,31 +42,13 @@ class Toast extends CampaignEngagementVector {
 
       .cohort-toast {
         background: white;
-        border-radius: 12px;
+        border-radius: 20px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         padding: 1rem;
         display: flex;
         gap: 0.75rem;
         cursor: pointer;
-        transition: transform 0.2s ease;
-        position: relative;
-        align-items: center;
-      }
-
-      .cohort-toast-close {
-        z-index: 9999;
-        position: absolute;
-        padding-right: 0.5rem;
-        top: 0;
-        right: 0;
-        font-size: 1rem;
-        cursor: pointer;
-        color: #666;
-        font-family: sans-serif;
-      }
-
-      .cohort-toast:hover {
-        transform: translateY(-2px);
+        align-items: flex-start;
       }
 
       .cohort-toast-image {
@@ -65,16 +58,29 @@ class Toast extends CampaignEngagementVector {
         object-fit: cover;
       }
 
+      @media (max-width: 640px) {
+        .cohort-toast-image {
+          display: none;
+        }
+      }
+
       .cohort-toast-content {
         flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
         min-width: 0;
+      }
+
+      .cohort-toast-title-wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
       }
 
       .cohort-toast-title {
         font-size: 0.875rem;
         font-weight: 600;
-        margin-bottom: 0.25rem;
-        color: #1a1a1a;
       }
 
       .cohort-toast-description {
@@ -82,14 +88,17 @@ class Toast extends CampaignEngagementVector {
         color: #666;
         margin: 0;
         overflow: hidden;
+        color: rgba(0, 0, 0, 0.60);
+      }
+
+      .cohort-toast-link {
+        margin-top: 0.5rem;
+        width: fit-content;
       }
 
       @media (max-width: 640px) {
-        .cohort-toast-container {
-          width: calc(100% - 32px);
-          left: 16px !important;
-          right: 16px !important;
-          bottom: 16px !important;
+        .cohort-toast-link {
+          width: 100%;
         }
       }
     `;
@@ -100,27 +109,13 @@ class Toast extends CampaignEngagementVector {
     const position = this.#toastConfig.position;
     const container = document.createElement('div');
 
+    const handleRemoval = () => container.remove();
+
     container.id = 'cohort-campaign-diffusion-toast';
     container.className = `cohort-toast-container ${position}`;
 
-    const closeButton = document.createElement('button');
-    closeButton.className = 'cohort-toast-close';
-    closeButton.textContent = 'x';
-
-    closeButton.onclick = () => {
-      sessionStorage.setItem(config.SESSION_STORAGE_KEY, 'true');
-      container.remove();
-    };
-
-    container.appendChild(closeButton);
-
     const toast = document.createElement('div');
     toast.className = 'cohort-toast';
-    toast.addEventListener('click', () => {
-      if (this.campaignConfig.link) {
-        window.open(this.campaignConfig.link, '_blank');
-      }
-    });
 
     if (this.campaignConfig.imageUrl) {
       const image = document.createElement('img');
@@ -134,16 +129,32 @@ class Toast extends CampaignEngagementVector {
     const content = document.createElement('div');
     content.className = 'cohort-toast-content';
 
+    const titleWrapper = document.createElement('div');
+
+    titleWrapper.className = 'cohort-toast-title-wrapper';
+
     const title = document.createElement('h3');
     title.className = 'cohort-toast-title';
     title.textContent = this.campaignConfig.name;
 
+    const closeButton = getCloseButton('cohort-toast-close', handleRemoval);
+
+    titleWrapper.appendChild(title);
+    titleWrapper.appendChild(closeButton);
+
     const description = document.createElement('p');
     description.className = 'cohort-toast-description';
     description.textContent = this.campaignConfig.description;
+    const link = getChallengeViewButton(
+      'cohort-toast-link',
+      this.campaignConfig.link,
+      this.campaignConfig.accentColor,
+      handleRemoval,
+    );
 
-    content.appendChild(title);
+    content.appendChild(titleWrapper);
     content.appendChild(description);
+    content.appendChild(link);
     toast.appendChild(content);
     container.appendChild(toast);
 
