@@ -3,15 +3,6 @@ import config from './config';
 import getLocalizedValue from './localization';
 
 export const getCloseButton = (className: string, onClick: () => void) => {
-  const styleElement = document.createElement('style');
-
-  styleElement.textContent = `
-    .cohort-engagement-vector-close {
-      width: 20px;
-      height: 20px;
-      color: rgba(0, 0, 0, 0.60);
-    }
-  `;
   const closeButton = document.createElement('button');
   const closeIcon = document.createElement('img');
 
@@ -25,31 +16,10 @@ export const getCloseButton = (className: string, onClick: () => void) => {
     sessionStorage.setItem(config.SESSION_STORAGE_KEY, 'true');
     onClick();
   };
-  document.head.appendChild(styleElement);
   return closeButton;
 };
 
-export const getChallengeViewButton = (
-  className: string,
-  url: string,
-  color: string,
-  onClick: () => void,
-) => {
-  const styleElement = document.createElement('style');
-
-  styleElement.textContent = `
-    .cohort-engagement-vector-link {
-      display: block;
-      padding: 0.25rem 0.75rem;
-      background-color: ${color};
-      color: #fff;
-      border-radius: 0.5rem;
-      font-size: 0.875rem;
-      text-decoration: none;
-      font-weight: 500;
-      text-align: center;
-    }
-  `;
+export const getChallengeViewButton = (className: string, url: string, onClick: () => void) => {
   const link = document.createElement('a');
   const translations = {
     en: 'View Challenge',
@@ -64,6 +34,27 @@ export const getChallengeViewButton = (
     sessionStorage.setItem(config.SESSION_STORAGE_KEY, 'true');
     onClick();
   };
-  document.head.appendChild(styleElement);
   return link;
+};
+
+export const getImageOrVideo = (imageUrl: string | null, videoUrl: string | null) => {
+  if (imageUrl) {
+    const image = document.createElement('img');
+
+    image.src = imageUrl;
+    return image;
+  }
+
+  if (videoUrl) {
+    const video = document.createElement('video');
+
+    video.src = videoUrl;
+    video.autoplay = true;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.controls = false;
+    return video;
+  }
+  return null;
 };

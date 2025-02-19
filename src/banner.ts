@@ -1,4 +1,4 @@
-import {getChallengeViewButton, getCloseButton} from './dom';
+import {getChallengeViewButton, getCloseButton, getImageOrVideo} from './dom';
 import Logger from './logger';
 import type {BannerSDKConfig, CampaignConfig} from './utils';
 import {CampaignEngagementVector} from './utils';
@@ -38,7 +38,7 @@ class Banner extends CampaignEngagementVector {
         }
       }
 
-      .cohort-banner-image {
+      .cohort-banner-media {
         width: 50px;
         height: 50px;
         object-fit: cover;
@@ -46,7 +46,7 @@ class Banner extends CampaignEngagementVector {
       }
 
       @media (max-width: 640px) {
-        .cohort-banner-image {
+        .cohort-banner-media {
           display: none;
         }
       }
@@ -118,18 +118,17 @@ class Banner extends CampaignEngagementVector {
       this.#logger.error(`Target element with selector "${this.#bannerConfig.selector}" not found`);
       return;
     }
+    const container = this.createShadowContainer();
     const banner = document.createElement('div');
-    const handleRemoval = () => banner.remove();
-
     banner.id = 'cohort-campaign-diffusion-banner';
 
-    if (this.campaignConfig.imageUrl) {
-      const image = document.createElement('img');
+    const handleRemoval = () => this.destroy();
 
-      image.className = 'cohort-banner-image';
-      image.src = this.campaignConfig.imageUrl;
-      image.alt = this.campaignConfig.name;
-      banner.appendChild(image);
+    const media = getImageOrVideo(this.campaignConfig.imageUrl, this.campaignConfig.videoUrl);
+
+    if (media) {
+      media.className = 'cohort-banner-media';
+      banner.appendChild(media);
     }
     const content = document.createElement('div');
 
@@ -155,7 +154,6 @@ class Banner extends CampaignEngagementVector {
     const link = getChallengeViewButton(
       'cohort-banner-link',
       this.campaignConfig.link,
-      this.campaignConfig.accentColor,
       handleRemoval,
     );
     const closeButton = getCloseButton('cohort-banner-close', handleRemoval);
@@ -168,16 +166,9 @@ class Banner extends CampaignEngagementVector {
     banner.appendChild(content);
     banner.appendChild(rightContent);
 
-    document.head.appendChild(this.generateStyles());
-    targetElement.insertAdjacentElement('afterend', banner);
-  }
-
-  destroy(): void {
-    const banner = document.getElementById('cohort-campaign-diffusion-banner');
-
-    if (banner) {
-      banner.remove();
-    }
+    this.addStylesToShadowRoot(this.generateStyles());
+    this.shadowRoot?.appendChild(banner);
+    targetElement.insertAdjacentElement('afterend', container);
   }
 }
 

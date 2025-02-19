@@ -1,4 +1,4 @@
-import {getChallengeViewButton, getCloseButton} from './dom';
+import {getChallengeViewButton, getCloseButton, getImageOrVideo} from './dom';
 import type {CampaignConfig, ToastSDKConfig} from './utils';
 import {CampaignEngagementVector} from './utils';
 
@@ -51,7 +51,7 @@ class Toast extends CampaignEngagementVector {
         align-items: flex-start;
       }
 
-      .cohort-toast-image {
+      .cohort-toast-media {
         width: 48px;
         height: 48px;
         border-radius: 8px;
@@ -59,7 +59,7 @@ class Toast extends CampaignEngagementVector {
       }
 
       @media (max-width: 640px) {
-        .cohort-toast-image {
+        .cohort-toast-media {
           display: none;
         }
       }
@@ -106,31 +106,29 @@ class Toast extends CampaignEngagementVector {
   }
 
   show(): void {
-    const position = this.#toastConfig.position;
-    const container = document.createElement('div');
+    const container = this.createShadowContainer();
 
-    const handleRemoval = () => container.remove();
+    const handleRemoval = () => this.destroy();
 
-    container.id = 'cohort-campaign-diffusion-toast';
-    container.className = `cohort-toast-container ${position}`;
+    const toastContainer = document.createElement('div');
+    toastContainer.className = `cohort-toast-container ${this.#toastConfig.position}`;
+    container.appendChild(toastContainer);
 
     const toast = document.createElement('div');
     toast.className = 'cohort-toast';
+    toastContainer.appendChild(toast);
 
-    if (this.campaignConfig.imageUrl) {
-      const image = document.createElement('img');
+    const media = getImageOrVideo(this.campaignConfig.imageUrl, this.campaignConfig.videoUrl);
 
-      image.className = 'cohort-toast-image';
-      image.src = this.campaignConfig.imageUrl;
-      image.alt = this.campaignConfig.name;
-      toast.appendChild(image);
+    if (media) {
+      media.className = 'cohort-toast-media';
+      toast.appendChild(media);
     }
 
     const content = document.createElement('div');
     content.className = 'cohort-toast-content';
 
     const titleWrapper = document.createElement('div');
-
     titleWrapper.className = 'cohort-toast-title-wrapper';
 
     const title = document.createElement('h3');
@@ -138,17 +136,16 @@ class Toast extends CampaignEngagementVector {
     title.textContent = this.campaignConfig.name;
 
     const closeButton = getCloseButton('cohort-toast-close', handleRemoval);
-
     titleWrapper.appendChild(title);
     titleWrapper.appendChild(closeButton);
 
     const description = document.createElement('p');
     description.className = 'cohort-toast-description';
     description.textContent = this.campaignConfig.description;
+
     const link = getChallengeViewButton(
       'cohort-toast-link',
       this.campaignConfig.link,
-      this.campaignConfig.accentColor,
       handleRemoval,
     );
 
@@ -156,18 +153,10 @@ class Toast extends CampaignEngagementVector {
     content.appendChild(description);
     content.appendChild(link);
     toast.appendChild(content);
-    container.appendChild(toast);
 
-    document.head.appendChild(this.generateStyles());
+    this.addStylesToShadowRoot(this.generateStyles());
+    this.shadowRoot?.appendChild(toastContainer);
     document.body.appendChild(container);
-  }
-
-  destroy(): void {
-    const container = document.getElementById('cohort-campaign-diffusion-toast');
-
-    if (container) {
-      container.remove();
-    }
   }
 }
 

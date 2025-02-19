@@ -1,35 +1,28 @@
-import {getChallengeViewButton, getCloseButton} from './dom';
+import {getChallengeViewButton, getCloseButton, getImageOrVideo} from './dom';
 import {CampaignEngagementVector} from './utils';
 
 class Modal extends CampaignEngagementVector {
+  #dialog: HTMLDialogElement | null = null;
+
   generateStyles(): HTMLStyleElement {
     const styleElement = document.createElement('style');
 
     styleElement.textContent = `
-      dialog#cohort-campaign-diffusion-modal {
-        border-radius: 0.5rem;
-        border: none;
-        max-width: 80vw;
-        width: 500px;
-        padding: 1rem;
+      .cohort-modal-content {
         text-align: center;
         display: flex;
         flex-direction: column;
         gap: 1rem;
       }
 
-      dialog#cohort-campaign-diffusion-modal::backdrop {
-        background: rgba(0, 0, 0, 0.4);
-      }
-
-      .cohort-modal-image-wrapper {
+      .cohort-modal-media-wrapper {
         display: flex;
         position: relative;
         justify-content: center;
         width: 100%;
       }
 
-      .cohort-modal-image {
+      .cohort-modal-media {
         height: 200px;
         width: 200px;
         aspect-ratio: 1 / 1;
@@ -59,44 +52,54 @@ class Modal extends CampaignEngagementVector {
       .cohort-modal-link {
         padding: 0.5rem 1rem;
       }
-
-
     `;
     return styleElement;
   }
 
   show(): void {
-    // Create dialog element
-    const dialog = document.createElement('dialog');
-    dialog.id = 'cohort-campaign-diffusion-modal';
+    const dialogStyleElement = document.createElement('style');
 
-    const handleClose = (): void => {
-      // sessionStorage.setItem(config.SESSION_STORAGE_KEY, 'true');
-      dialog.close();
-      dialog.remove();
-    };
+    dialogStyleElement.textContent = `
+      dialog#cohort-campaign-diffusion-modal {
+        border-radius: 0.5rem;
+        border: none;
+        max-width: 80vw;
+        width: 500px;
+        padding: 1rem;
+      }
 
-    dialog.addEventListener('click', e => {
-      if (e.target === dialog) {
+      dialog#cohort-campaign-diffusion-modal::backdrop {
+        background: rgba(0, 0, 0, 0.4);
+      }
+    `;
+    // Creating dialog in the Shadow DOM would break dialog behavior
+    this.#dialog = document.createElement('dialog');
+    this.#dialog.id = 'cohort-campaign-diffusion-modal';
+
+    const handleClose = (): void => this.destroy();
+
+    this.#dialog.addEventListener('click', e => {
+      if (e.target === this.#dialog) {
         handleClose();
       }
     });
-    // Handle escape key (built into dialog)
-    dialog.addEventListener('cancel', handleClose);
+    this.#dialog.addEventListener('cancel', handleClose);
 
-    const imageWrapper = document.createElement('div');
-    imageWrapper.className = 'cohort-modal-image-wrapper';
+    const container = this.createShadowContainer();
+    // Create content wrapper in shadow DOM
+    const content = document.createElement('div');
+    content.className = 'cohort-modal-content';
 
-    if (this.campaignConfig.imageUrl) {
-      const image = document.createElement('img');
+    const mediaWrapper = document.createElement('div');
+    mediaWrapper.className = 'cohort-modal-media-wrapper';
+    const media = getImageOrVideo(this.campaignConfig.imageUrl, this.campaignConfig.videoUrl);
 
-      image.className = 'cohort-modal-image';
-      image.src = this.campaignConfig.imageUrl;
-      image.alt = this.campaignConfig.name;
-      imageWrapper.appendChild(image);
+    if (media) {
+      media.className = 'cohort-modal-media';
+      mediaWrapper.appendChild(media);
     }
     const closeButton = getCloseButton('cohort-modal-close', handleClose);
-    imageWrapper.appendChild(closeButton);
+    mediaWrapper.appendChild(closeButton);
 
     const title = document.createElement('h2');
     title.className = 'cohort-modal-title';
@@ -106,32 +109,29 @@ class Modal extends CampaignEngagementVector {
     description.className = 'cohort-modal-description';
     description.textContent = this.campaignConfig.description;
 
-    const link = getChallengeViewButton(
-      'cohort-modal-link',
-      this.campaignConfig.link,
-      this.campaignConfig.accentColor,
-      handleClose,
-    );
+    const link = getChallengeViewButton('cohort-modal-link', this.campaignConfig.link, handleClose);
 
-    dialog.appendChild(imageWrapper);
-    dialog.appendChild(title);
-    dialog.appendChild(description);
-    dialog.appendChild(link);
+    content.appendChild(mediaWrapper);
+    content.appendChild(title);
+    content.appendChild(description);
+    content.appendChild(link);
 
-    // Add styles to document
-    document.head.appendChild(this.generateStyles());
+    // Add content to shadow DOM
+    this.addStylesToShadowRoot(this.generateStyles());
+    this.shadowRoot?.appendChild(content);
 
-    // Add dialog to document and show it
-    document.body.appendChild(dialog);
-    dialog.showModal();
+    // Add shadow root container to dialog
+    this.#dialog.appendChild(container);
+
+    // Add dialog to light DOM and show it
+    document.head.appendChild(dialogStyleElement);
+    document.body.appendChild(this.#dialog);
+    this.#dialog.showModal();
   }
 
-  destroy(): void {
-    const modal = document.getElementById('cohort-campaign-diffusion-modal');
-
-    if (modal) {
-      modal.remove();
-    }
+  override destroy(): void {
+    this.#dialog?.remove();
+    this.#dialog = null;
   }
 }
 
