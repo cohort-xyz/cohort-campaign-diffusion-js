@@ -38,13 +38,6 @@ export const getChallengeViewButton = (className: string, url: string, onClick: 
 };
 
 export const getImageOrVideo = (imageUrl: string | null, videoUrl: string | null) => {
-  if (imageUrl) {
-    const image = document.createElement('img');
-
-    image.src = imageUrl;
-    return image;
-  }
-
   if (videoUrl) {
     const video = document.createElement('video');
 
@@ -55,6 +48,13 @@ export const getImageOrVideo = (imageUrl: string | null, videoUrl: string | null
     video.playsInline = true;
     video.controls = false;
     return video;
+  }
+
+  if (imageUrl) {
+    const image = document.createElement('img');
+
+    image.src = imageUrl;
+    return image;
   }
   return null;
 };
